@@ -21,6 +21,12 @@ classdef distALG < handle
         
         function out = distort(obj,in)
             if obj.type == 0 % Fuzzexp
+                    % This algorithm takes inspiration and is modified from
+                    % FEXP2 from Will Pirkle - Designing Audio Effect Plugins in C++: For AAX, AU, and VST3 with DSP Theory 
+                    % Page 548
+                    % ISBN : 9780429954320
+                    % It was modified primarily to allow for the saturation
+                    % control 
                     out = (1 - exp(1)^(-abs(obj.sat * in))) / (1 - (exp(1)^-obj.sat));
                     if in < 0
                         out = -out;
@@ -59,7 +65,12 @@ classdef distALG < handle
             elseif  obj.type == 5 % HARMONIC
 
                 dist = obj.sat * 10;
-                out = tanh((dist * in^2) + (dist * in^4) + (dist * in^6) + (dist* in^8) + (dist * in^10) + (dist * in^12) + (dist * in^14) + (dist * in^16) + (dist * in^18) + (dist * in^20) + (dist * in^22) + (dist * in^24) + (dist * in^26) + (dist * in^28) + (dist * in^30) + (dist * in^32));
+                
+                out = tanh((dist * in^2) + (dist * in^4) + (dist * in^6) + (dist* in^8) + (dist * in^10) ...
+                    + (dist * in^12) + (dist * in^14) + (dist * in^16) + (dist * in^18) + (dist * in^20) ...
+                    + (dist * in^22) + (dist * in^24) + (dist * in^26) + (dist * in^28) + (dist * in^30) ...
+                    + (dist * in^32));
+
             % UNUSED / PROTOTYPE DISTORTION TYPES
             elseif  obj.type == 6
                 out = sawtooth(obj.sat*100) * in;
